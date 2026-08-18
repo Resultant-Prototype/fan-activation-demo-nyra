@@ -81,7 +81,7 @@
   }
   #tab1-banner-headline { font-size: 22px; font-weight: 700; }
   #tab1-banner-headline span { color: var(--teal); }
-  .system-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .system-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
   .system-card { border-top: 3px solid var(--accent-red); }
   .system-card-name { font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
   .system-card-pain { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
@@ -362,15 +362,24 @@ function computeSendResults(segmentId, channelIds) {
   return { exclusion, perChannel, combined };
 }
 
-// Dual export: CommonJS for the Node test above, global assignment for the
-// browser copy inlined into index.html in Task 6.
+// CommonJS export for the Node test above. When this same block is copied
+// into index.html's inline <script> tag, no export step runs there: the
+// top-level const and function declarations above simply become ordinary
+// script-global bindings, which is all the browser copy needs.
   // COPIED-MODULE-END
 
   let selectedSegmentId = null;
   let selectedChannelIds = [];
+  let revealTimers = [];
+  let isSending = false;
+
+  function clearReveal() {
+    revealTimers.forEach((timerId) => clearTimeout(timerId));
+    revealTimers = [];
+  }
 
   function updateSendButton() {
-    document.getElementById('send-btn').disabled = !(selectedSegmentId && selectedChannelIds.length > 0);
+    document.getElementById('send-btn').disabled = isSending || !(selectedSegmentId && selectedChannelIds.length > 0);
   }
 
   function selectSegment(segmentId) {
@@ -378,6 +387,8 @@ function computeSendResults(segmentId, channelIds) {
     document.querySelectorAll('.segment-card').forEach((el) => {
       el.classList.toggle('selected', el.dataset.segment === segmentId);
     });
+    document.getElementById('reveal-log').innerHTML = '';
+    document.getElementById('results-panel').classList.remove('visible');
     updateSendButton();
   }
 
@@ -396,15 +407,19 @@ function computeSendResults(segmentId, channelIds) {
     document.getElementById('channel-note').textContent =
       selectedChannelIds.includes('sms') ? smsChannel.consentNote : '';
 
+    document.getElementById('reveal-log').innerHTML = '';
+    document.getElementById('results-panel').classList.remove('visible');
     updateSendButton();
   }
 
   function metricLabel(key) {
-    const labels = { delivered: 'Delivered', opened: 'Opened', clicked: 'Clicked', purchases: 'Purchases Attributed' };
+    const labels = { delivered: 'Messages Delivered', opened: 'Opened', clicked: 'Clicked', purchases: 'Purchases Attributed' };
     return labels[key] || key;
   }
 
   function buildAndSend() {
+    clearReveal();
+    isSending = true;
     document.getElementById('send-btn').disabled = true;
     const log = document.getElementById('reveal-log');
     log.innerHTML = '';
@@ -421,20 +436,23 @@ function computeSendResults(segmentId, channelIds) {
     ];
 
     lines.forEach((text, i) => {
-      setTimeout(() => {
+      const timerId = setTimeout(() => {
         const div = document.createElement('div');
         div.textContent = text;
         log.appendChild(div);
       }, i * 600);
+      revealTimers.push(timerId);
     });
 
-    setTimeout(() => showResults(results), lines.length * 600 + 400);
+    const finalTimerId = setTimeout(() => showResults(results), lines.length * 600 + 400);
+    revealTimers.push(finalTimerId);
   }
 
   function showResults(results) {
+    const METRIC_ORDER = ['delivered', 'opened', 'clicked', 'purchases'];
     const row = document.getElementById('results-ban-row');
     row.innerHTML = '';
-    Object.keys(results.combined).forEach((key) => {
+    METRIC_ORDER.filter((key) => key in results.combined).forEach((key) => {
       const card = document.createElement('div');
       card.className = 'ban-card';
       card.innerHTML = `<div class="ban-label">${metricLabel(key)}</div><div class="ban-value">${results.combined[key].toLocaleString()}</div>`;
@@ -443,9 +461,13 @@ function computeSendResults(segmentId, channelIds) {
     document.getElementById('results-sync-line').textContent =
       `Results synced back to Databricks: ${results.exclusion.eligible.toLocaleString()} profiles updated.`;
     document.getElementById('results-panel').classList.add('visible');
+    isSending = false;
+    updateSendButton();
   }
 
   function resetTab3() {
+    clearReveal();
+    isSending = false;
     selectedSegmentId = null;
     selectedChannelIds = [];
     document.querySelectorAll('.segment-card').forEach((el) => el.classList.remove('selected'));

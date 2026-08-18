@@ -107,8 +107,10 @@ function computeSendResults(segmentId, channelIds) {
   return { exclusion, perChannel, combined };
 }
 
-// Dual export: CommonJS for the Node test above, global assignment for the
-// browser copy inlined into index.html in Task 6.
+// CommonJS export for the Node test above. When this same block is copied
+// into index.html's inline <script> tag, no export step runs there: the
+// top-level const and function declarations above simply become ordinary
+// script-global bindings, which is all the browser copy needs.
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { SEGMENTS, CHANNELS, getSegment, getChannel, computeExclusion, computeChannelResult, computeSendResults };
 }
