@@ -75,7 +75,16 @@
     background: none; border: none; color: var(--teal); font-family: var(--font);
     font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline;
   }
-  /* ANCHOR: TAB1_STYLES */
+  #tab1-banner {
+    background: var(--navy); color: var(--white);
+    border-radius: var(--radius); padding: 20px 24px; margin-bottom: 20px;
+  }
+  #tab1-banner-headline { font-size: 22px; font-weight: 700; }
+  #tab1-banner-headline span { color: var(--teal); }
+  .system-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .system-card { border-top: 3px solid var(--accent-red); }
+  .system-card-name { font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
+  .system-card-pain { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
   /* ANCHOR: TAB2_STYLES */
   /* ANCHOR: TAB3_STYLES */
 </style>
@@ -95,7 +104,31 @@
 
 <main id="app-main">
   <section id="tab1" class="tab-panel active">
-    <!-- ANCHOR: TAB1_CONTENT -->
+    <div id="tab1-banner">
+      <div id="tab1-banner-headline">5 systems. <span>No shared answer</span> to who can actually be contacted.</div>
+    </div>
+    <div class="system-grid">
+      <div class="card system-card">
+        <div class="system-card-name">Ticketing</div>
+        <div class="system-card-pain">Ticket buyer preferences live in the box office system. Marketing never sees them.</div>
+      </div>
+      <div class="card system-card">
+        <div class="system-card-name">Wagering</div>
+        <div class="system-card-pain">Wagering accounts carry their own opt-in flag, and the one signal that can never be ignored: self-exclusion. Neither reaches any other system.</div>
+      </div>
+      <div class="card system-card">
+        <div class="system-card-name">Email</div>
+        <div class="system-card-pain">The email platform tracks unsubscribes, but only for its own list. It has no idea what any other system already promised a customer.</div>
+      </div>
+      <div class="card system-card">
+        <div class="system-card-name">Concessions</div>
+        <div class="system-card-pain">Concession purchases sit in their own system, with no link back to a person's marketing preferences.</div>
+      </div>
+      <div class="card system-card">
+        <div class="system-card-name">Unsubscribe roster</div>
+        <div class="system-card-pain">A standalone do-not-contact list exists. Half the systems above have never checked it.</div>
+      </div>
+    </div>
   </section>
   <section id="tab2" class="tab-panel">
     <!-- ANCHOR: TAB2_CONTENT -->
