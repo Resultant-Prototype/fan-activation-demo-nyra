@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belmont Racing Group — Activation Layer Demo</title>
+<style>
+  :root {
+    --navy: #1B2A4A;
+    --teal: #00A896;
+    --teal-light: #E6F7F5;
+    --white: #FFFFFF;
+    --gray-50: #F8F9FA;
+    --gray-100: #EEF0F3;
+    --gray-200: #D4D8DF;
+    --gray-600: #6B7280;
+    --gray-900: #111827;
+    --accent-red: #D85F52;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --radius: 6px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.10);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--gray-50); color: var(--gray-900); font-size: 14px; }
+  #app-header {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--navy); color: var(--white);
+    padding: 12px 24px; height: 56px;
+  }
+  #org-name { font-size: 16px; font-weight: 600; }
+  #prepared-by { font-size: 11px; color: rgba(255,255,255,.6); }
+  #tab-bar {
+    display: flex; gap: 0;
+    background: var(--white);
+    border-bottom: 2px solid var(--gray-200);
+    padding: 0 24px;
+  }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 14px 20px; font-family: var(--font); font-size: 14px; font-weight: 500;
+    color: var(--gray-600); border-bottom: 3px solid transparent; margin-bottom: -2px;
+    transition: color .15s, border-color .15s;
+  }
+  .tab-btn:hover { color: var(--navy); }
+  .tab-btn.active { color: var(--navy); border-bottom-color: var(--teal); }
+  #app-main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .ban-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
+  .ban-card {
+    background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius); padding: 16px 20px;
+    box-shadow: var(--shadow-sm); text-align: center;
+  }
+  .ban-label { font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+  .ban-value { font-size: 26px; font-weight: 700; color: var(--navy); line-height: 1.1; }
+  .badge {
+    display: inline-block; background: var(--teal-light); color: var(--teal);
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 99px;
+  }
+  .btn {
+    font-family: var(--font); font-size: 13px; font-weight: 600;
+    border-radius: var(--radius); padding: 10px 20px; cursor: pointer; border: none;
+  }
+  .btn-primary { background: var(--teal); color: var(--white); }
+  .btn-primary:hover:not(:disabled) { background: #008a7a; }
+  .btn-primary:disabled { background: var(--gray-200); color: var(--gray-600); cursor: not-allowed; }
+  .btn-link {
+    background: none; border: none; color: var(--teal); font-family: var(--font);
+    font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline;
+  }
+  /* ANCHOR: TAB1_STYLES */
+  /* ANCHOR: TAB2_STYLES */
+  /* ANCHOR: TAB3_STYLES */
+</style>
+</head>
+<body>
+
+<header id="app-header">
+  <div id="org-name">Belmont Racing Group</div>
+  <div id="prepared-by">Prepared by Resultant</div>
+</header>
+
+<nav id="tab-bar">
+  <button class="tab-btn active" data-tab="tab1" onclick="switchTab('tab1')">Today</button>
+  <button class="tab-btn" data-tab="tab2" onclick="switchTab('tab2')">Target Architecture</button>
+  <button class="tab-btn" data-tab="tab3" onclick="switchTab('tab3')">Try It</button>
+</nav>
+
+<main id="app-main">
+  <section id="tab1" class="tab-panel active">
+    <!-- ANCHOR: TAB1_CONTENT -->
+  </section>
+  <section id="tab2" class="tab-panel">
+    <!-- ANCHOR: TAB2_CONTENT -->
+  </section>
+  <section id="tab3" class="tab-panel">
+    <!-- ANCHOR: TAB3_CONTENT -->
+  </section>
+</main>
+
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-panel').forEach((el) => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach((el) => el.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
+  }
+
+  // ANCHOR: TAB3_SCRIPT
+</script>
+
+</body>
+</html>
