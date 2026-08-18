@@ -85,7 +85,33 @@
   .system-card { border-top: 3px solid var(--accent-red); }
   .system-card-name { font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
   .system-card-pain { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
-  /* ANCHOR: TAB2_STYLES */
+  .arch-diagram { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .arch-arrow { font-size: 22px; color: var(--gray-600); line-height: 1; }
+  .databricks-box {
+    width: 100%; background: var(--teal-light); border: 2px solid var(--teal);
+    border-radius: var(--radius); padding: 20px;
+  }
+  .databricks-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; text-align: center; }
+  .databricks-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+  .databricks-item {
+    background: var(--white); border: 1px solid var(--teal); border-radius: var(--radius);
+    padding: 10px 14px; font-size: 12px; font-weight: 600; color: var(--navy); text-align: center;
+  }
+  .activation-box {
+    width: 60%; background: var(--navy); color: var(--white);
+    border-radius: var(--radius); padding: 16px; text-align: center;
+    font-size: 14px; font-weight: 700;
+  }
+  .channel-row { display: flex; gap: 16px; justify-content: center; width: 100%; }
+  .channel-box {
+    flex: 1; max-width: 160px; background: var(--white); border: 1px solid var(--gray-200);
+    border-radius: var(--radius); padding: 14px; text-align: center; font-size: 13px; font-weight: 600;
+    color: var(--gray-900); box-shadow: var(--shadow-sm);
+  }
+  .return-loop {
+    width: 100%; border: 2px dashed var(--gray-200); border-radius: var(--radius);
+    padding: 12px 20px; text-align: center; font-size: 13px; color: var(--gray-600);
+  }
   /* ANCHOR: TAB3_STYLES */
 </style>
 </head>
@@ -131,7 +157,30 @@
     </div>
   </section>
   <section id="tab2" class="tab-panel">
-    <!-- ANCHOR: TAB2_CONTENT -->
+    <div class="card">
+      <div class="arch-diagram">
+        <div class="databricks-box">
+          <div class="databricks-title">Databricks: System of Record</div>
+          <div class="databricks-grid">
+            <div class="databricks-item">Customer 360</div>
+            <div class="databricks-item">Identity Resolution</div>
+            <div class="databricks-item">Consent &amp; Suppression</div>
+            <div class="databricks-item">Regulatory Controls</div>
+            <div class="databricks-item">Segments</div>
+          </div>
+        </div>
+        <div class="arch-arrow">&#8595;</div>
+        <div class="activation-box">Activation Layer</div>
+        <div class="arch-arrow">&#8595;</div>
+        <div class="channel-row">
+          <div class="channel-box">Email</div>
+          <div class="channel-box">SMS</div>
+          <div class="channel-box">Direct Mail</div>
+        </div>
+        <div class="arch-arrow">&#8593;</div>
+        <div class="return-loop">Opens, clicks, purchases, and wagering activity flow back into Databricks</div>
+      </div>
+    </div>
   </section>
   <section id="tab3" class="tab-panel">
     <!-- ANCHOR: TAB3_CONTENT -->
