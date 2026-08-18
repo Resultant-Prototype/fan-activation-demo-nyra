@@ -30,7 +30,7 @@ function assertEqual(actual, expected, label) {
   assertEqual(result.eligible, 6854, 'founders-cup eligible');
 }
 
-// Test 3: Kids Club exclusion math matches the spec table
+// Test 3: Clubhouse Kids exclusion math matches the spec table
 {
   const result = computeExclusion('clubhouse-kids');
   assertEqual(result.excludedTotal, 2578, 'clubhouse-kids excludedTotal');
