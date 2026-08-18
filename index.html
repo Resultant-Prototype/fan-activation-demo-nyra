@@ -22,7 +22,15 @@
     --shadow-md: 0 4px 12px rgba(0,0,0,.10);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font); background: var(--gray-50); color: var(--gray-900); font-size: 14px; }
+  body {
+    font-family: var(--font); color: var(--gray-900); font-size: 14px;
+    background-color: var(--gray-50);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(0,168,150,0.06), transparent 45%),
+      radial-gradient(circle at 85% 90%, rgba(27,42,74,0.05), transparent 45%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
   #app-header {
     display: flex; align-items: center; justify-content: space-between;
     background: var(--navy); color: var(--white);
@@ -97,6 +105,7 @@
     background: var(--white); border: 1px solid var(--teal); border-radius: var(--radius);
     padding: 10px 14px; font-size: 12px; font-weight: 600; color: var(--navy); text-align: center;
   }
+  .databricks-item.compliance { border-left: 3px solid var(--accent-red); }
   .activation-box {
     width: 60%; background: var(--navy); color: var(--white);
     border-radius: var(--radius); padding: 16px; text-align: center;
@@ -114,8 +123,8 @@
   }
   .stores-nothing-badge { margin-bottom: 16px; }
   .segment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
-  .segment-card { cursor: pointer; border: 2px solid var(--gray-200); transition: border-color .15s; }
-  .segment-card:hover { border-color: var(--teal); }
+  .segment-card { cursor: pointer; border: 2px solid var(--gray-200); transition: border-color .15s, transform .15s, box-shadow .15s; }
+  .segment-card:hover { border-color: var(--teal); transform: translateY(-2px); box-shadow: var(--shadow-md); }
   .segment-card.selected { border-color: var(--teal); background: var(--teal-light); }
   .segment-card-name { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
   .segment-card-desc { font-size: 12px; color: var(--gray-600); margin-bottom: 10px; }
@@ -124,15 +133,23 @@
   .channel-chip {
     cursor: pointer; border: 2px solid var(--gray-200); border-radius: 99px;
     padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--gray-600);
-    background: var(--white); transition: border-color .15s, color .15s;
+    background: var(--white); transition: border-color .15s, color .15s, transform .15s, box-shadow .15s;
   }
-  .channel-chip:hover { border-color: var(--teal); }
+  .channel-chip:hover { border-color: var(--teal); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
   .channel-chip.selected { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
   .channel-note { font-size: 12px; color: var(--accent-red); margin-bottom: 16px; min-height: 16px; }
   #send-row { margin-bottom: 20px; }
-  #reveal-log { font-size: 13px; color: var(--gray-600); line-height: 2; margin-bottom: 16px; }
-  #reveal-log div { opacity: 0; animation: reveal-fade .3s forwards; }
+  #reveal-log {
+    font-size: 13px; color: var(--gray-600); line-height: 1.9; margin-bottom: 16px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  #reveal-log div { opacity: 0; animation: reveal-fade .3s forwards; padding-left: 20px; position: relative; }
+  #reveal-log div::before {
+    content: '\2713'; position: absolute; left: 0; color: var(--teal); font-weight: 700;
+    font-family: var(--font);
+  }
   @keyframes reveal-fade { to { opacity: 1; } }
+  #results-channel-note { font-size: 12px; color: var(--gray-600); margin-bottom: 8px; display: none; }
   #results-panel { display: none; }
   #results-panel.visible { display: block; }
   #results-panel .card { margin-bottom: 16px; }
@@ -187,8 +204,8 @@
           <div class="databricks-grid">
             <div class="databricks-item">Customer 360</div>
             <div class="databricks-item">Identity Resolution</div>
-            <div class="databricks-item">Consent &amp; Suppression</div>
-            <div class="databricks-item">Regulatory Controls</div>
+            <div class="databricks-item compliance">Consent &amp; Suppression</div>
+            <div class="databricks-item compliance">Regulatory Controls</div>
             <div class="databricks-item">Segments</div>
           </div>
         </div>
@@ -242,6 +259,7 @@
     <div id="reveal-log"></div>
 
     <div id="results-panel">
+      <p id="results-channel-note"></p>
       <div class="ban-row" id="results-ban-row"></div>
       <p id="results-sync-line" style="font-size: 13px; color: var(--gray-600); margin-top: 12px;"></p>
       <p style="margin-top: 16px;"><a class="btn-link" id="reset-link" onclick="resetTab3()">Try another audience</a></p>
@@ -462,6 +480,16 @@ function computeSendResults(segmentId, channelIds) {
       card.innerHTML = `<div class="ban-label">${metricLabel(key)}</div><div class="ban-value">${results.combined[key].toLocaleString()}</div>`;
       row.appendChild(card);
     });
+
+    const channelNote = document.getElementById('results-channel-note');
+    if (results.perChannel.length > 1) {
+      const channelNames = results.perChannel.map((r) => r.label).join(', ');
+      channelNote.textContent = `Combined across ${results.perChannel.length} channels: ${channelNames}`;
+      channelNote.style.display = 'block';
+    } else {
+      channelNote.style.display = 'none';
+    }
+
     document.getElementById('results-sync-line').textContent =
       `Results synced back to Databricks: ${results.exclusion.eligible.toLocaleString()} profiles updated.`;
     document.getElementById('results-panel').classList.add('visible');
