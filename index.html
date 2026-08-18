@@ -257,7 +257,204 @@
     document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('active');
   }
 
-  // ANCHOR: TAB3_SCRIPT
+  // COPIED-MODULE-START
+const SEGMENTS = [
+  {
+    id: 'crestwood',
+    name: 'Crestwood Meet Lapsed Ticket Buyers',
+    description: 'Bought a ticket in the last 3 years, nothing in 90+ days',
+    total: 24300,
+    noPreference: 3650,
+    optedOut: 890,
+    selfExclusion: 14,
+  },
+  {
+    id: 'founders-cup',
+    name: 'Founders Cup Wagering VIPs',
+    description: 'High-value ADW accounts active in the last 12 months',
+    total: 8150,
+    noPreference: 980,
+    optedOut: 310,
+    selfExclusion: 6,
+  },
+  {
+    id: 'clubhouse-kids',
+    name: 'Clubhouse Kids Families',
+    description: 'Family segment tied to the kids club program',
+    total: 12900,
+    noPreference: 2150,
+    optedOut: 425,
+    selfExclusion: 3,
+  },
+];
+
+const CHANNELS = [
+  {
+    id: 'email',
+    label: 'Email',
+    consentNote: null,
+    metrics: ['delivered', 'opened', 'clicked', 'purchases'],
+    rates: { delivered: 0.98, opened: 0.32, clicked: 0.07, purchases: 0.018 },
+  },
+  {
+    id: 'sms',
+    label: 'SMS',
+    consentNote: 'Requires documented consent, not just a preference flag.',
+    metrics: ['delivered', 'clicked', 'purchases'],
+    rates: { delivered: 0.95, clicked: 0.12, purchases: 0.031 },
+  },
+  {
+    id: 'mail',
+    label: 'Direct Mail',
+    consentNote: null,
+    metrics: ['delivered', 'purchases'],
+    rates: { delivered: 0.97, purchases: 0.009 },
+  },
+];
+
+function getSegment(segmentId) {
+  const segment = SEGMENTS.find((s) => s.id === segmentId);
+  if (!segment) throw new Error(`Unknown segment: ${segmentId}`);
+  return segment;
+}
+
+function getChannel(channelId) {
+  const channel = CHANNELS.find((c) => c.id === channelId);
+  if (!channel) throw new Error(`Unknown channel: ${channelId}`);
+  return channel;
+}
+
+function computeExclusion(segmentId) {
+  const s = getSegment(segmentId);
+  const excludedTotal = s.noPreference + s.optedOut + s.selfExclusion;
+  const eligible = s.total - excludedTotal;
+  return {
+    total: s.total,
+    noPreference: s.noPreference,
+    optedOut: s.optedOut,
+    selfExclusion: s.selfExclusion,
+    excludedTotal,
+    eligible,
+  };
+}
+
+function computeChannelResult(eligible, channelId) {
+  const c = getChannel(channelId);
+  const result = { channelId, label: c.label };
+  for (const metric of c.metrics) {
+    result[metric] = Math.round(eligible * c.rates[metric]);
+  }
+  return result;
+}
+
+function computeSendResults(segmentId, channelIds) {
+  const exclusion = computeExclusion(segmentId);
+  const perChannel = channelIds.map((id) => computeChannelResult(exclusion.eligible, id));
+
+  const combined = {};
+  for (const result of perChannel) {
+    for (const key of Object.keys(result)) {
+      if (key === 'channelId' || key === 'label') continue;
+      combined[key] = (combined[key] || 0) + result[key];
+    }
+  }
+
+  return { exclusion, perChannel, combined };
+}
+
+// Dual export: CommonJS for the Node test above, global assignment for the
+// browser copy inlined into index.html in Task 6.
+  // COPIED-MODULE-END
+
+  let selectedSegmentId = null;
+  let selectedChannelIds = [];
+
+  function updateSendButton() {
+    document.getElementById('send-btn').disabled = !(selectedSegmentId && selectedChannelIds.length > 0);
+  }
+
+  function selectSegment(segmentId) {
+    selectedSegmentId = segmentId;
+    document.querySelectorAll('.segment-card').forEach((el) => {
+      el.classList.toggle('selected', el.dataset.segment === segmentId);
+    });
+    updateSendButton();
+  }
+
+  function toggleChannel(channelId) {
+    const idx = selectedChannelIds.indexOf(channelId);
+    if (idx === -1) {
+      selectedChannelIds.push(channelId);
+    } else {
+      selectedChannelIds.splice(idx, 1);
+    }
+    document.querySelectorAll('.channel-chip').forEach((el) => {
+      el.classList.toggle('selected', selectedChannelIds.includes(el.dataset.channel));
+    });
+
+    const smsChannel = getChannel('sms');
+    document.getElementById('channel-note').textContent =
+      selectedChannelIds.includes('sms') ? smsChannel.consentNote : '';
+
+    updateSendButton();
+  }
+
+  function metricLabel(key) {
+    const labels = { delivered: 'Delivered', opened: 'Opened', clicked: 'Clicked', purchases: 'Purchases Attributed' };
+    return labels[key] || key;
+  }
+
+  function buildAndSend() {
+    document.getElementById('send-btn').disabled = true;
+    const log = document.getElementById('reveal-log');
+    log.innerHTML = '';
+
+    const results = computeSendResults(selectedSegmentId, selectedChannelIds);
+    const channelNames = selectedChannelIds.map((id) => getChannel(id).label).join(', ');
+
+    const lines = [
+      'Checking consent and suppression rules...',
+      `Excluding self-exclusion, opt-outs, and unresolved preferences: ${results.exclusion.excludedTotal.toLocaleString()} people ` +
+        `(${results.exclusion.noPreference.toLocaleString()} no preference on file, ${results.exclusion.optedOut.toLocaleString()} opted out, ${results.exclusion.selfExclusion} self-excluded)`,
+      `Eligible audience: ${results.exclusion.eligible.toLocaleString()}`,
+      `Sending via ${channelNames}...`,
+    ];
+
+    lines.forEach((text, i) => {
+      setTimeout(() => {
+        const div = document.createElement('div');
+        div.textContent = text;
+        log.appendChild(div);
+      }, i * 600);
+    });
+
+    setTimeout(() => showResults(results), lines.length * 600 + 400);
+  }
+
+  function showResults(results) {
+    const row = document.getElementById('results-ban-row');
+    row.innerHTML = '';
+    Object.keys(results.combined).forEach((key) => {
+      const card = document.createElement('div');
+      card.className = 'ban-card';
+      card.innerHTML = `<div class="ban-label">${metricLabel(key)}</div><div class="ban-value">${results.combined[key].toLocaleString()}</div>`;
+      row.appendChild(card);
+    });
+    document.getElementById('results-sync-line').textContent =
+      `Results synced back to Databricks: ${results.exclusion.eligible.toLocaleString()} profiles updated.`;
+    document.getElementById('results-panel').classList.add('visible');
+  }
+
+  function resetTab3() {
+    selectedSegmentId = null;
+    selectedChannelIds = [];
+    document.querySelectorAll('.segment-card').forEach((el) => el.classList.remove('selected'));
+    document.querySelectorAll('.channel-chip').forEach((el) => el.classList.remove('selected'));
+    document.getElementById('channel-note').textContent = '';
+    document.getElementById('reveal-log').innerHTML = '';
+    document.getElementById('results-panel').classList.remove('visible');
+    updateSendButton();
+  }
 </script>
 
 </body>
