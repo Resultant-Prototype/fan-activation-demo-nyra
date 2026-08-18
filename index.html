@@ -112,7 +112,30 @@
     width: 100%; border: 2px dashed var(--gray-200); border-radius: var(--radius);
     padding: 12px 20px; text-align: center; font-size: 13px; color: var(--gray-600);
   }
-  /* ANCHOR: TAB3_STYLES */
+  .stores-nothing-badge { margin-bottom: 16px; }
+  .segment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .segment-card { cursor: pointer; border: 2px solid var(--gray-200); transition: border-color .15s; }
+  .segment-card:hover { border-color: var(--teal); }
+  .segment-card.selected { border-color: var(--teal); background: var(--teal-light); }
+  .segment-card-name { font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+  .segment-card-desc { font-size: 12px; color: var(--gray-600); margin-bottom: 10px; }
+  .segment-card-count { font-size: 20px; font-weight: 700; color: var(--navy); }
+  .channel-row-picker { display: flex; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .channel-chip {
+    cursor: pointer; border: 2px solid var(--gray-200); border-radius: 99px;
+    padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--gray-600);
+    background: var(--white); transition: border-color .15s, color .15s;
+  }
+  .channel-chip:hover { border-color: var(--teal); }
+  .channel-chip.selected { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+  .channel-note { font-size: 12px; color: var(--accent-red); margin-bottom: 16px; min-height: 16px; }
+  #send-row { margin-bottom: 20px; }
+  #reveal-log { font-size: 13px; color: var(--gray-600); line-height: 2; margin-bottom: 16px; }
+  #reveal-log div { opacity: 0; animation: reveal-fade .3s forwards; }
+  @keyframes reveal-fade { to { opacity: 1; } }
+  #results-panel { display: none; }
+  #results-panel.visible { display: block; }
+  #results-panel .card { margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -183,7 +206,46 @@
     </div>
   </section>
   <section id="tab3" class="tab-panel">
-    <!-- ANCHOR: TAB3_CONTENT -->
+    <div class="badge stores-nothing-badge">Reads from Databricks. Stores nothing here.</div>
+
+    <h3 style="margin-bottom: 12px; font-size: 14px; color: var(--gray-900);">1. Choose an audience</h3>
+    <div class="segment-grid">
+      <div class="card segment-card" data-segment="crestwood" onclick="selectSegment('crestwood')">
+        <div class="segment-card-name">Crestwood Meet Lapsed Ticket Buyers</div>
+        <div class="segment-card-desc">Bought a ticket in the last 3 years, nothing in 90+ days</div>
+        <div class="segment-card-count">24,300 people</div>
+      </div>
+      <div class="card segment-card" data-segment="founders-cup" onclick="selectSegment('founders-cup')">
+        <div class="segment-card-name">Founders Cup Wagering VIPs</div>
+        <div class="segment-card-desc">High-value ADW accounts active in the last 12 months</div>
+        <div class="segment-card-count">8,150 people</div>
+      </div>
+      <div class="card segment-card" data-segment="clubhouse-kids" onclick="selectSegment('clubhouse-kids')">
+        <div class="segment-card-name">Clubhouse Kids Families</div>
+        <div class="segment-card-desc">Family segment tied to the kids club program</div>
+        <div class="segment-card-count">12,900 people</div>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom: 12px; font-size: 14px; color: var(--gray-900);">2. Choose a channel</h3>
+    <div class="channel-row-picker">
+      <div class="channel-chip" data-channel="email" onclick="toggleChannel('email')">Email</div>
+      <div class="channel-chip" data-channel="sms" onclick="toggleChannel('sms')">SMS</div>
+      <div class="channel-chip" data-channel="mail" onclick="toggleChannel('mail')">Direct Mail</div>
+    </div>
+    <div class="channel-note" id="channel-note"></div>
+
+    <div id="send-row">
+      <button class="btn btn-primary" id="send-btn" disabled onclick="buildAndSend()">Build &amp; Send</button>
+    </div>
+
+    <div id="reveal-log"></div>
+
+    <div id="results-panel">
+      <div class="ban-row" id="results-ban-row"></div>
+      <p id="results-sync-line" style="font-size: 13px; color: var(--gray-600); margin-top: 12px;"></p>
+      <p style="margin-top: 16px;"><a class="btn-link" id="reset-link" onclick="resetTab3()">Try another audience</a></p>
+    </div>
   </section>
 </main>
 
