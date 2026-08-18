@@ -151,6 +151,13 @@
   #results-panel { display: none; }
   #results-panel.visible { display: block; }
   #results-panel .card { margin-bottom: 16px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 10px;
+  }
+  .tab-note { font-size: 13px; color: var(--gray-600); max-width: 640px; line-height: 1.5; }
+  .tab-note-closing { margin-top: 20px; }
+  .tab-note-intro { margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -168,6 +175,7 @@
 
 <main id="app-main">
   <section id="tab1" class="tab-panel active">
+    <div class="eyebrow">The Problem</div>
     <div id="tab1-banner">
       <div id="tab1-banner-headline">5 systems. <span>No shared answer</span> to who can actually be contacted.</div>
     </div>
@@ -193,8 +201,11 @@
         <div class="system-card-pain">A standalone do-not-contact list exists. Half the systems above have never checked it.</div>
       </div>
     </div>
+    <p class="tab-note tab-note-closing">None of this is a data quality problem. It's that no single system was ever built to answer one question: can NYRA actually contact this fan.</p>
   </section>
   <section id="tab2" class="tab-panel">
+    <div class="eyebrow">The Target State</div>
+    <p class="tab-note tab-note-intro">What NYRA already owns on Databricks, arranged to answer that same question, for every fan, on every channel.</p>
     <div class="card">
       <div class="arch-diagram">
         <div class="databricks-box">
