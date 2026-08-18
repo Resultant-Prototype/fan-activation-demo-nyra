@@ -387,6 +387,8 @@ function computeSendResults(segmentId, channelIds) {
     document.querySelectorAll('.segment-card').forEach((el) => {
       el.classList.toggle('selected', el.dataset.segment === segmentId);
     });
+    clearReveal();
+    isSending = false;
     document.getElementById('reveal-log').innerHTML = '';
     document.getElementById('results-panel').classList.remove('visible');
     updateSendButton();
@@ -407,6 +409,8 @@ function computeSendResults(segmentId, channelIds) {
     document.getElementById('channel-note').textContent =
       selectedChannelIds.includes('sms') ? smsChannel.consentNote : '';
 
+    clearReveal();
+    isSending = false;
     document.getElementById('reveal-log').innerHTML = '';
     document.getElementById('results-panel').classList.remove('visible');
     updateSendButton();
