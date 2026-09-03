@@ -158,6 +158,66 @@
   .tab-note { font-size: 13px; color: var(--gray-600); max-width: 640px; line-height: 1.5; }
   .tab-note-closing { margin-top: 20px; }
   .tab-note-intro { margin-bottom: 16px; }
+
+  /* Individual View + Segment Builder (added for the 9/3 sync follow-up) */
+  .status-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: var(--radius); }
+  .status-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .status-pill-good { background: var(--teal-light); color: var(--teal); }
+  .status-pill-critical { background: #FBEAE8; color: var(--accent-red); }
+  .field-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 16px; }
+  @media (max-width: 720px) { .field-grid { grid-template-columns: 1fr; } }
+  .field-grid .card { margin: 0; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--gray-900); margin-bottom: 10px; }
+  .consent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  @media (max-width: 560px) { .consent-grid { grid-template-columns: repeat(2, 1fr); } }
+  .consent-item { border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 8px; text-align: center; }
+  .consent-item-name { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-600); }
+  .consent-item-state { font-size: 12.5px; font-weight: 700; margin-top: 3px; }
+  .consent-item.on .consent-item-state { color: var(--teal); }
+  .consent-item.off .consent-item-state { color: var(--gray-600); }
+  .detail-rows { display: flex; flex-direction: column; gap: 7px; }
+  .detail-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; padding: 7px 10px; border-radius: var(--radius); background: var(--gray-50); }
+  .restricted-note { font-size: 12.5px; color: var(--gray-600); font-style: italic; padding: 9px 10px; background: var(--gray-50); border-radius: var(--radius); }
+  .timeline { display: flex; flex-direction: column; }
+  .timeline-item { display: grid; grid-template-columns: 96px 1fr; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--gray-100); }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-date { font-size: 11.5px; color: var(--gray-600); }
+  .timeline-desc { font-size: 13px; color: var(--gray-900); }
+  .timeline-source { font-size: 11px; color: var(--teal); font-weight: 600; margin-top: 2px; }
+  .flag-note { margin-top: 10px; background: #FBEAE8; color: var(--accent-red); font-size: 12.5px; padding: 9px 11px; border-radius: var(--radius); font-weight: 600; }
+  .role-hint { font-size: 12.5px; color: var(--gray-600); max-width: 640px; line-height: 1.5; margin-top: 4px; }
+  .filter-panel { display: flex; flex-direction: column; gap: 10px; }
+  .filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; background: var(--gray-50); border-radius: var(--radius); }
+  .filter-row label { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .filter-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--teal); }
+  .filter-row input[type="number"] { width: 84px; padding: 5px 7px; border: 1px solid var(--gray-200); border-radius: 4px; font-family: var(--font); }
+  .region-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .region-chip { cursor: pointer; border: 2px solid var(--gray-200); border-radius: 99px; padding: 5px 14px; font-size: 12.5px; font-weight: 600; color: var(--gray-600); background: var(--white); }
+  .region-chip.on { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+  .compliance-lock-note { font-size: 12px; color: var(--gray-600); background: var(--gray-50); padding: 9px 11px; border-radius: var(--radius); }
+  .live-count { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+  .live-count-n { font-size: 32px; font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
+  .live-count-lbl { font-size: 13px; color: var(--gray-600); }
+  .funnel-row { display: grid; grid-template-columns: 128px 1fr 72px; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .funnel-label { font-size: 12.5px; color: var(--gray-600); font-weight: 500; }
+  .funnel-track { height: 14px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+  .funnel-fill { height: 100%; border-radius: 4px; }
+  .funnel-val { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+  .preview-table { width: 100%; border-collapse: collapse; margin-top: 4px; font-size: 13px; }
+  .preview-table th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-600); padding: 6px 0; border-bottom: 1px solid var(--gray-200); }
+  .preview-table td { padding: 8px 0; border-bottom: 1px solid var(--gray-100); }
+  .preview-table tr:last-child td { border-bottom: none; }
+  .mini-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .mini-bar-track { flex: 1; height: 7px; background: var(--gray-100); border-radius: 4px; overflow: hidden; min-width: 60px; }
+  .mini-bar-fill { height: 100%; background: var(--teal); border-radius: 4px; }
+  .builder-actions { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .action-group { display: flex; gap: 8px; align-items: center; background: var(--gray-50); padding: 8px; border-radius: var(--radius); flex-wrap: wrap; }
+  .action-group input[type="text"], .action-group select { padding: 7px 9px; border-radius: 4px; border: 1px solid var(--gray-200); font-size: 13px; font-family: var(--font); }
+  .action-group input[type="text"] { width: 210px; }
+  .audit-log { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .audit-item { font-size: 12.5px; padding: 9px 11px; border-radius: var(--radius); background: var(--gray-50); border-left: 3px solid var(--teal); display: flex; flex-direction: column; gap: 2px; }
+  .audit-item .audit-status { color: var(--teal); font-weight: 600; }
+  .audit-empty { font-size: 12.5px; color: var(--gray-600); font-style: italic; }
 </style>
 </head>
 <body>
@@ -170,6 +230,8 @@
 <nav id="tab-bar">
   <button class="tab-btn active" data-tab="tab1" onclick="switchTab('tab1')">Today</button>
   <button class="tab-btn" data-tab="tab2" onclick="switchTab('tab2')">Target Architecture</button>
+  <button class="tab-btn" data-tab="tab-individual" onclick="switchTab('tab-individual')">Individual View</button>
+  <button class="tab-btn" data-tab="tab-segment" onclick="switchTab('tab-segment')">Segment Builder</button>
   <button class="tab-btn" data-tab="tab3" onclick="switchTab('tab3')">Try It</button>
 </nav>
 
@@ -229,6 +291,76 @@
         <div class="arch-arrow">&#8593;</div>
         <div class="return-loop">Opens, clicks, purchases, and wagering activity flow back into Databricks</div>
       </div>
+    </div>
+  </section>
+  <section id="tab-individual" class="tab-panel">
+    <div class="eyebrow">One Resolved Identity</div>
+    <p class="tab-note tab-note-intro">Every system Belmont Racing Group runs on, matched to one fan record. What's visible below changes with the role selected — the platform enforces need-to-know access once, instead of every downstream tool doing it separately.</p>
+    <div class="card" style="margin-bottom: 16px;">
+      <div class="card-title">Viewing as</div>
+      <div class="channel-row-picker" id="role-picker">
+        <div class="channel-chip selected" data-role="marketing" onclick="selectRole('marketing')">Marketing Rep</div>
+        <div class="channel-chip" data-role="vip" onclick="selectRole('vip')">VIP Services</div>
+        <div class="channel-chip" data-role="compliance" onclick="selectRole('compliance')">Compliance Officer</div>
+        <div class="channel-chip" data-role="exec" onclick="selectRole('exec')">Executive</div>
+      </div>
+      <p class="role-hint" id="role-hint"></p>
+    </div>
+    <div class="card" style="margin-bottom: 16px;">
+      <div class="card-title">Search fan record</div>
+      <select id="fan-select" onchange="renderFan()" style="padding: 8px 10px; border-radius: var(--radius); border: 1px solid var(--gray-200); font-family: var(--font); min-width: 260px;"></select>
+    </div>
+    <div id="fan-card"></div>
+  </section>
+  <section id="tab-segment" class="tab-panel">
+    <div class="eyebrow">Build An Audience</div>
+    <p class="tab-note tab-note-intro">The 9/2 stakeholder problem in one line: ~120,000 people get most messages, and the relevant audience is closer to 3,000. This is that filter, live, against a demo sample of the fan base — self-exclusion and data-use restrictions are removed before any criteria below run.</p>
+    <div class="field-grid">
+      <div class="card">
+        <div class="card-title">Filter criteria</div>
+        <div class="filter-panel">
+          <div class="filter-row"><label><input type="checkbox" id="sf-ticket" checked onchange="recomputeSegment()"> Ticket buyer</label></div>
+          <div class="filter-row"><label>Wagered in last 30 days &ge; $<input type="number" id="sf-wager" value="100" min="0" step="25" oninput="recomputeSegment()"></label></div>
+          <div class="filter-row"><label><input type="checkbox" id="sf-fnb" checked onchange="recomputeSegment()"> Food &amp; beverage purchase this season</label></div>
+          <div class="filter-row"><label><input type="checkbox" id="sf-horseman" onchange="recomputeSegment()"> Horsemen-linked account</label></div>
+          <div class="filter-row"><label><input type="checkbox" id="sf-optin" checked onchange="recomputeSegment()"> Marketing opt-in only</label></div>
+          <div class="filter-row" style="flex-direction: column; align-items: flex-start;">
+            <span style="font-size: 13px; font-weight: 600;">Region</span>
+            <div class="region-row" id="region-row"></div>
+          </div>
+          <div class="compliance-lock-note">Self-exclusion (on-track or mobile wagering) and data-use restrictions are always removed first — that rule can't be turned off from here.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Reach</div>
+        <div class="live-count"><span class="live-count-n" id="segment-count">0</span><span class="live-count-lbl">fans match, ready to activate</span></div>
+        <div id="segment-funnel"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <div class="card-title">Segment preview — aggregate only</div>
+      <table class="preview-table" id="segment-preview-table"></table>
+      <p class="restricted-note" style="margin-top: 10px;">No names, emails, or phone numbers are shown at this stage. Individual identifiers become visible only after activation, and only inside the delivery system that received them.</p>
+
+      <div class="builder-actions">
+        <div class="action-group">
+          <input type="text" id="tag-input" placeholder="VIP Outreach — Belmont Prep">
+          <button class="btn btn-primary" onclick="tagSegment()">Tag segment</button>
+        </div>
+        <div class="action-group">
+          <select id="dest-select">
+            <option>Email</option>
+            <option>SMS</option>
+            <option>Direct Mail</option>
+            <option>Survey</option>
+          </select>
+          <button class="btn btn-primary" onclick="activateSegment()">Activate segment</button>
+        </div>
+      </div>
+
+      <div class="card-title" style="margin-top: 20px;">Recent actions — audit trail</div>
+      <div class="audit-log" id="audit-log"><span class="audit-empty">No actions yet this session.</span></div>
     </div>
   </section>
   <section id="tab3" class="tab-panel">
@@ -387,6 +519,92 @@ function computeSendResults(segmentId, channelIds) {
   }
 
   return { exclusion, perChannel, combined };
+}
+
+function mulberry32(seed) {
+  let a = seed;
+  return function () {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function weightedPick(rand, options, weights) {
+  const r = rand();
+  let acc = 0;
+  for (let i = 0; i < options.length; i++) {
+    acc += weights[i];
+    if (r <= acc) return options[i];
+  }
+  return options[options.length - 1];
+}
+
+function generatePool(size, seed) {
+  const rand = mulberry32(seed);
+  const pool = [];
+  for (let i = 0; i < size; i++) {
+    const region = weightedPick(rand, ['home-state', 'neighboring-state', 'out-of-state'], [0.55, 0.25, 0.2]);
+    const trackExclusion = rand() < 0.006;
+    const mobileExclusion = trackExclusion || rand() < 0.011;
+    const dataRestricted = region === 'out-of-state' && rand() < 0.12;
+    pool.push({
+      ticketBuyer: rand() < 0.42,
+      wager30: rand() < 0.55 ? Math.round(rand() * rand() * 3000) : 0,
+      fnb: rand() < 0.34,
+      horseman: rand() < 0.028,
+      marketingOptIn: rand() < 0.71,
+      trackExclusion,
+      mobileExclusion,
+      dataRestricted,
+      region,
+    });
+  }
+  return pool;
+}
+
+const AUDIENCE_POOL = generatePool(5000, 20260903);
+
+function computeFilteredAudience(pool, filters) {
+  const f = Object.assign(
+    { ticketBuyer: false, minWager: 0, fnb: false, horseman: false, optInOnly: true, regions: ['home-state', 'neighboring-state', 'out-of-state'] },
+    filters
+  );
+  const complianceSafe = pool.filter((p) => !(p.trackExclusion || p.mobileExclusion || p.dataRestricted));
+  const matched = complianceSafe.filter((p) => {
+    if (f.ticketBuyer && !p.ticketBuyer) return false;
+    if (p.wager30 < f.minWager) return false;
+    if (f.fnb && !p.fnb) return false;
+    if (f.horseman && !p.horseman) return false;
+    if (f.optInOnly && !p.marketingOptIn) return false;
+    if (!f.regions.includes(p.region)) return false;
+    return true;
+  });
+  return { universe: pool.length, complianceSafe: complianceSafe.length, matched: matched.length, matchedRecords: matched };
+}
+
+function summarizeAudience(matchedRecords) {
+  const n = matchedRecords.length;
+  const regionCounts = { 'home-state': 0, 'neighboring-state': 0, 'out-of-state': 0 };
+  if (n === 0) return { avgWager: 0, horsemanShare: 0, optInRate: 0, regionCounts };
+  const avgWager = Math.round(matchedRecords.reduce((sum, p) => sum + p.wager30, 0) / n);
+  const horsemanShare = Math.round((matchedRecords.filter((p) => p.horseman).length / n) * 100);
+  const optInRate = Math.round((matchedRecords.filter((p) => p.marketingOptIn).length / n) * 100);
+  matchedRecords.forEach((p) => { regionCounts[p.region]++; });
+  return { avgWager, horsemanShare, optInRate, regionCounts };
+}
+
+function computeSendResultsForAudience(eligible, channelIds) {
+  const perChannel = channelIds.map((id) => computeChannelResult(eligible, id));
+  const combined = {};
+  for (const result of perChannel) {
+    for (const key of Object.keys(result)) {
+      if (key === 'channelId' || key === 'label') continue;
+      combined[key] = (combined[key] || 0) + result[key];
+    }
+  }
+  return { eligible, perChannel, combined };
 }
 
 // CommonJS export for the Node test above. When this same block is copied
