@@ -231,8 +231,7 @@
   <button class="tab-btn active" data-tab="tab1" onclick="switchTab('tab1')">Today</button>
   <button class="tab-btn" data-tab="tab2" onclick="switchTab('tab2')">Target Architecture</button>
   <button class="tab-btn" data-tab="tab-individual" onclick="switchTab('tab-individual')">Individual View</button>
-  <button class="tab-btn" data-tab="tab-segment" onclick="switchTab('tab-segment')">Segment Builder</button>
-  <button class="tab-btn" data-tab="tab3" onclick="switchTab('tab3')">Try It</button>
+  <button class="tab-btn" data-tab="tab3" onclick="switchTab('tab3')">Segment Builder</button>
 </nav>
 
 <main id="app-main">
@@ -310,9 +309,22 @@
     </div>
     <div id="fan-card"></div>
   </section>
-  <section id="tab-segment" class="tab-panel">
-    <div class="eyebrow">Build An Audience</div>
-    <p class="tab-note tab-note-intro">The 9/2 stakeholder problem in one line: ~120,000 people get most messages, and the relevant audience is closer to 3,000. This is that filter, live, against a demo sample of the fan base — self-exclusion and data-use restrictions are removed before any criteria below run.</p>
+  <section id="tab3" class="tab-panel">
+    <div class="badge stores-nothing-badge">Reads from Databricks. Stores nothing here.</div>
+
+    <div class="card" style="margin-bottom: 16px;">
+      <div class="card-title">Viewing as</div>
+      <div class="channel-row-picker">
+        <div class="channel-chip role-chip selected" data-role="frontline" onclick="selectRole('frontline')">Front-line Staff</div>
+        <div class="channel-chip role-chip" data-role="compliance" onclick="selectRole('compliance')">Compliance Officer</div>
+      </div>
+      <p class="role-hint"></p>
+    </div>
+
+    <h3 style="margin-bottom: 12px; font-size: 14px; color: var(--gray-900);">Saved segments</h3>
+    <div class="segment-grid" id="saved-segment-row"></div>
+
+    <h3 style="margin-bottom: 12px; font-size: 14px; color: var(--gray-900);">1. Build an audience</h3>
     <div class="field-grid">
       <div class="card">
         <div class="card-title">Filter criteria</div>
@@ -321,7 +333,7 @@
           <div class="filter-row"><label>Wagered in last 30 days &ge; $<input type="number" id="sf-wager" value="100" min="0" step="25" oninput="recomputeSegment()"></label></div>
           <div class="filter-row"><label><input type="checkbox" id="sf-fnb" checked onchange="recomputeSegment()"> Food &amp; beverage purchase this season</label></div>
           <div class="filter-row"><label><input type="checkbox" id="sf-horseman" onchange="recomputeSegment()"> Horsemen-linked account</label></div>
-          <div class="filter-row"><label><input type="checkbox" id="sf-optin" checked onchange="recomputeSegment()"> Marketing opt-in only</label></div>
+          <div class="filter-row"><label><input type="checkbox" id="sf-optin" onchange="recomputeSegment()"> Marketing opt-in only</label></div>
           <div class="filter-row" style="flex-direction: column; align-items: flex-start;">
             <span style="font-size: 13px; font-weight: 600;">Region</span>
             <div class="region-row" id="region-row"></div>
@@ -336,51 +348,17 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top: 16px;">
+    <div class="card" style="margin-top: 16px; margin-bottom: 24px;">
       <div class="card-title">Segment preview — aggregate only</div>
       <table class="preview-table" id="segment-preview-table"></table>
       <p class="restricted-note" style="margin-top: 10px;">No names, emails, or phone numbers are shown at this stage. Individual identifiers become visible only after activation, and only inside the delivery system that received them.</p>
-
       <div class="builder-actions">
         <div class="action-group">
-          <input type="text" id="tag-input" placeholder="VIP Outreach — Belmont Prep">
-          <button class="btn btn-primary" onclick="tagSegment()">Tag segment</button>
-        </div>
-        <div class="action-group">
-          <select id="dest-select">
-            <option>Email</option>
-            <option>SMS</option>
-            <option>Direct Mail</option>
-            <option>Survey</option>
-          </select>
-          <button class="btn btn-primary" onclick="activateSegment()">Activate segment</button>
+          <input type="text" id="tag-input" placeholder="VIP Outreach — Belmont Opening">
+          <button class="btn btn-primary" id="tag-save-btn" onclick="tagAndSaveSegment()">Tag &amp; save segment</button>
         </div>
       </div>
-
-      <div class="card-title" style="margin-top: 20px;">Recent actions — audit trail</div>
-      <div class="audit-log" id="audit-log"><span class="audit-empty">No actions yet this session.</span></div>
-    </div>
-  </section>
-  <section id="tab3" class="tab-panel">
-    <div class="badge stores-nothing-badge">Reads from Databricks. Stores nothing here.</div>
-
-    <h3 style="margin-bottom: 12px; font-size: 14px; color: var(--gray-900);">1. Choose an audience</h3>
-    <div class="segment-grid">
-      <div class="card segment-card" data-segment="crestwood" onclick="selectSegment('crestwood')">
-        <div class="segment-card-name">Crestwood Meet Lapsed Ticket Buyers</div>
-        <div class="segment-card-desc">Bought a ticket in the last 3 years, nothing in 90+ days</div>
-        <div class="segment-card-count">24,300 people</div>
-      </div>
-      <div class="card segment-card" data-segment="founders-cup" onclick="selectSegment('founders-cup')">
-        <div class="segment-card-name">Founders Cup Wagering VIPs</div>
-        <div class="segment-card-desc">High-value ADW accounts active in the last 12 months</div>
-        <div class="segment-card-count">8,150 people</div>
-      </div>
-      <div class="card segment-card" data-segment="clubhouse-kids" onclick="selectSegment('clubhouse-kids')">
-        <div class="segment-card-name">Clubhouse Kids Families</div>
-        <div class="segment-card-desc">Family segment tied to the kids club program</div>
-        <div class="segment-card-count">12,900 people</div>
-      </div>
+      <p class="restricted-note" id="tag-gate-note" style="margin-top: 8px;"></p>
     </div>
 
     <h3 style="margin-bottom: 12px; font-size: 14px; color: var(--gray-900);">2. Choose a channel</h3>
@@ -632,6 +610,7 @@ function computeSendResultsForAudience(eligible, channelIds) {
       el.textContent = ROLES[role].hint;
     });
     renderFan();
+    updateTagSaveGate();
   }
 
   function initRolePickers() {
@@ -818,7 +797,6 @@ function computeSendResultsForAudience(eligible, channelIds) {
       </div>`;
   }
 
-  let selectedSegmentId = null;
   let selectedChannelIds = [];
   let revealTimers = [];
   let isSending = false;
@@ -828,20 +806,138 @@ function computeSendResultsForAudience(eligible, channelIds) {
     revealTimers = [];
   }
 
-  function updateSendButton() {
-    document.getElementById('send-btn').disabled = isSending || !(selectedSegmentId && selectedChannelIds.length > 0);
+  const REGION_LABELS = { 'home-state': 'New York', 'neighboring-state': 'Tri-State (NJ/CT)', 'out-of-state': 'Other' };
+  let regionState = { 'home-state': true, 'neighboring-state': true, 'out-of-state': true };
+  let currentAudience = null;
+
+  const SAVED_SEGMENTS = [
+    {
+      id: 'saved-season-pass-lapsed',
+      name: 'Saratoga Season Pass — Lapsed 90+ Days',
+      filters: { ticketBuyer: true, minWager: 0, fnb: false, horseman: false, optInOnly: true, regions: ['home-state', 'neighboring-state', 'out-of-state'] },
+    },
+    {
+      id: 'saved-belmont-vip-outreach',
+      name: 'Belmont Opening VIP Outreach',
+      filters: { ticketBuyer: true, minWager: 500, fnb: true, horseman: false, optInOnly: true, regions: ['home-state', 'neighboring-state', 'out-of-state'] },
+    },
+    {
+      id: 'saved-fevo-bookers',
+      name: 'Fevo Experience Bookers',
+      filters: { ticketBuyer: true, minWager: 0, fnb: false, horseman: false, optInOnly: false, regions: ['home-state', 'neighboring-state', 'out-of-state'] },
+    },
+  ];
+
+  function getRegionSelection() {
+    return Object.keys(REGION_LABELS).filter((key) => regionState[key]);
   }
 
-  function selectSegment(segmentId) {
-    selectedSegmentId = segmentId;
-    document.querySelectorAll('.segment-card').forEach((el) => {
-      el.classList.toggle('selected', el.dataset.segment === segmentId);
-    });
-    clearReveal();
-    isSending = false;
-    document.getElementById('reveal-log').innerHTML = '';
-    document.getElementById('results-panel').classList.remove('visible');
+  function initRegionRow() {
+    document.getElementById('region-row').innerHTML = Object.keys(REGION_LABELS).map((key) =>
+      `<button type="button" class="region-chip on" data-region="${key}" onclick="toggleRegion('${key}')">${REGION_LABELS[key]}</button>`
+    ).join('');
+  }
+
+  function toggleRegion(key) {
+    regionState[key] = !regionState[key];
+    document.querySelector(`.region-chip[data-region="${key}"]`).classList.toggle('on', regionState[key]);
+    recomputeSegment();
+  }
+
+  function recomputeSegment() {
+    const filters = {
+      ticketBuyer: document.getElementById('sf-ticket').checked,
+      minWager: Number(document.getElementById('sf-wager').value) || 0,
+      fnb: document.getElementById('sf-fnb').checked,
+      horseman: document.getElementById('sf-horseman').checked,
+      optInOnly: document.getElementById('sf-optin').checked,
+      regions: getRegionSelection(),
+    };
+    currentAudience = computeFilteredAudience(AUDIENCE_POOL, filters);
+    document.getElementById('segment-count').textContent = currentAudience.matched.toLocaleString('en-US');
+
+    const stages = [
+      { label: 'Full sample', count: currentAudience.universe, tone: 0.35 },
+      { label: 'Compliance-safe', count: currentAudience.complianceSafe, tone: 0.65 },
+      { label: 'Matches filters', count: currentAudience.matched, tone: 1 },
+    ];
+    document.getElementById('segment-funnel').innerHTML = stages.map((s) => `
+      <div class="funnel-row">
+        <span class="funnel-label">${s.label}</span>
+        <div class="funnel-track"><div class="funnel-fill" style="width: ${(s.count / currentAudience.universe * 100).toFixed(1)}%; background: var(--navy); opacity: ${s.tone};"></div></div>
+        <span class="funnel-val">${s.count.toLocaleString('en-US')}</span>
+      </div>`).join('') + `<p class="restricted-note" style="margin-top: 8px;">Demo sample of ${currentAudience.universe.toLocaleString('en-US')} — NYRA's actual base is roughly 240,000 members. Same logic runs at that scale.</p>`;
+
+    const summary = summarizeAudience(currentAudience.matchedRecords);
+    document.getElementById('segment-preview-table').innerHTML = `
+      <tr><th>Metric</th><th>Value</th></tr>
+      <tr><td>Fans matched</td><td>${currentAudience.matched.toLocaleString('en-US')}</td></tr>
+      <tr><td>Avg. 30-day wager</td><td>${money(summary.avgWager)}</td></tr>
+      <tr><td>Also horsemen-linked</td><td>${summary.horsemanShare}%</td></tr>
+      <tr><td>Marketing opt-in rate</td><td>${summary.optInRate}%</td></tr>
+      ${Object.keys(REGION_LABELS).map((key) => `<tr><td>Region — ${REGION_LABELS[key]}</td><td><div class="mini-bar-wrap"><div class="mini-bar-track"><div class="mini-bar-fill" style="width: ${currentAudience.matched ? (summary.regionCounts[key] / currentAudience.matched * 100) : 0}%;"></div></div><span>${summary.regionCounts[key].toLocaleString('en-US')}</span></div></td></tr>`).join('')}
+    `;
+
     updateSendButton();
+  }
+
+  function renderSavedSegments() {
+    document.getElementById('saved-segment-row').innerHTML = SAVED_SEGMENTS.map((s) => `
+      <div class="card segment-card" onclick="applySavedSegment('${s.id}')">
+        <div class="segment-card-name">${s.name}</div>
+        <div class="segment-card-desc">Saved audience — click to load these criteria</div>
+      </div>`).join('');
+  }
+
+  function applySavedSegment(id) {
+    const saved = SAVED_SEGMENTS.find((s) => s.id === id);
+    if (!saved) return;
+    document.getElementById('sf-ticket').checked = saved.filters.ticketBuyer;
+    document.getElementById('sf-wager').value = saved.filters.minWager;
+    document.getElementById('sf-fnb').checked = saved.filters.fnb;
+    document.getElementById('sf-horseman').checked = saved.filters.horseman;
+    document.getElementById('sf-optin').checked = saved.filters.optInOnly;
+    regionState = { 'home-state': false, 'neighboring-state': false, 'out-of-state': false };
+    saved.filters.regions.forEach((r) => { regionState[r] = true; });
+    document.querySelectorAll('.region-chip').forEach((el) => {
+      el.classList.toggle('on', regionState[el.dataset.region]);
+    });
+    recomputeSegment();
+  }
+
+  function updateTagSaveGate() {
+    const btn = document.getElementById('tag-save-btn');
+    const note = document.getElementById('tag-gate-note');
+    const gated = currentRole !== 'compliance';
+    btn.disabled = gated;
+    note.textContent = gated
+      ? 'Saving a named segment requires Compliance sign-off — switch role, or send this to Compliance for approval.'
+      : '';
+  }
+
+  function tagAndSaveSegment() {
+    if (currentRole !== 'compliance' || !currentAudience) return;
+    const name = document.getElementById('tag-input').value.trim();
+    if (!name) return;
+    SAVED_SEGMENTS.push({
+      id: `saved-${Date.now()}`,
+      name,
+      filters: {
+        ticketBuyer: document.getElementById('sf-ticket').checked,
+        minWager: Number(document.getElementById('sf-wager').value) || 0,
+        fnb: document.getElementById('sf-fnb').checked,
+        horseman: document.getElementById('sf-horseman').checked,
+        optInOnly: document.getElementById('sf-optin').checked,
+        regions: getRegionSelection(),
+      },
+    });
+    document.getElementById('tag-input').value = '';
+    renderSavedSegments();
+  }
+
+  function updateSendButton() {
+    const eligible = currentAudience ? currentAudience.matched : 0;
+    document.getElementById('send-btn').disabled = isSending || !(eligible > 0 && selectedChannelIds.length > 0);
   }
 
   function toggleChannel(channelId) {
@@ -851,7 +947,7 @@ function computeSendResultsForAudience(eligible, channelIds) {
     } else {
       selectedChannelIds.splice(idx, 1);
     }
-    document.querySelectorAll('.channel-chip').forEach((el) => {
+    document.querySelectorAll('.channel-chip[data-channel]').forEach((el) => {
       el.classList.toggle('selected', selectedChannelIds.includes(el.dataset.channel));
     });
 
@@ -878,14 +974,15 @@ function computeSendResultsForAudience(eligible, channelIds) {
     const log = document.getElementById('reveal-log');
     log.innerHTML = '';
 
-    const results = computeSendResults(selectedSegmentId, selectedChannelIds);
+    const eligible = currentAudience.matched;
+    const excludedForCompliance = currentAudience.universe - currentAudience.complianceSafe;
+    const results = computeSendResultsForAudience(eligible, selectedChannelIds);
     const channelNames = selectedChannelIds.map((id) => getChannel(id).label).join(', ');
 
     const lines = [
       'Checking consent and suppression rules...',
-      `Excluding self-exclusion, opt-outs, and unresolved preferences: ${results.exclusion.excludedTotal.toLocaleString()} people ` +
-        `(${results.exclusion.noPreference.toLocaleString()} no preference on file, ${results.exclusion.optedOut.toLocaleString()} opted out, ${results.exclusion.selfExclusion} self-excluded)`,
-      `Eligible audience: ${results.exclusion.eligible.toLocaleString()}`,
+      `Removing self-exclusion and data-use restrictions: ${excludedForCompliance.toLocaleString()} people`,
+      `Eligible audience: ${eligible.toLocaleString()}`,
       `Sending via ${channelNames}...`,
     ];
 
@@ -923,7 +1020,7 @@ function computeSendResultsForAudience(eligible, channelIds) {
     }
 
     document.getElementById('results-sync-line').textContent =
-      `Results synced back to Databricks: ${results.exclusion.eligible.toLocaleString()} profiles updated.`;
+      `Results synced back to Databricks: ${results.eligible.toLocaleString()} profiles updated.`;
     document.getElementById('results-panel').classList.add('visible');
     isSending = false;
     updateSendButton();
@@ -932,14 +1029,16 @@ function computeSendResultsForAudience(eligible, channelIds) {
   initRolePickers();
   renderFanCardRow();
   renderFan();
+  initRegionRow();
+  renderSavedSegments();
+  recomputeSegment();
+  updateTagSaveGate();
 
   function resetTab3() {
     clearReveal();
     isSending = false;
-    selectedSegmentId = null;
     selectedChannelIds = [];
-    document.querySelectorAll('.segment-card').forEach((el) => el.classList.remove('selected'));
-    document.querySelectorAll('.channel-chip').forEach((el) => el.classList.remove('selected'));
+    document.querySelectorAll('.channel-chip[data-channel]').forEach((el) => el.classList.remove('selected'));
     document.getElementById('channel-note').textContent = '';
     document.getElementById('reveal-log').innerHTML = '';
     document.getElementById('results-panel').classList.remove('visible');
