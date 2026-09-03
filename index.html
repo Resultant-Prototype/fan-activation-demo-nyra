@@ -613,6 +613,34 @@ function computeSendResultsForAudience(eligible, channelIds) {
 // script-global bindings, which is all the browser copy needs.
   // COPIED-MODULE-END
 
+  const ROLES = {
+    frontline: {
+      label: 'Front-line Staff',
+      hint: 'Sees consent status, value tier, and interaction history to do the job. Contact detail and the granular exclusion breakdown stay with Compliance.',
+    },
+    compliance: {
+      label: 'Compliance Officer',
+      hint: 'Full exclusion and contact detail for regulatory review. Marketing value figures and interaction history stay out of scope.',
+    },
+  };
+  let currentRole = 'frontline';
+
+  function selectRole(role) {
+    currentRole = role;
+    document.querySelectorAll('.role-chip').forEach((el) => {
+      el.classList.toggle('selected', el.dataset.role === role);
+    });
+    document.querySelectorAll('.role-hint').forEach((el) => {
+      el.textContent = ROLES[role].hint;
+    });
+  }
+
+  function initRolePickers() {
+    document.querySelectorAll('.role-hint').forEach((el) => {
+      el.textContent = ROLES[currentRole].hint;
+    });
+  }
+
   let selectedSegmentId = null;
   let selectedChannelIds = [];
   let revealTimers = [];
