@@ -881,10 +881,21 @@ function computeSendResultsForAudience(eligible, channelIds) {
     updateSendButton();
   }
 
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  let selectedSavedSegmentId = null;
+
   function renderSavedSegments() {
     document.getElementById('saved-segment-row').innerHTML = SAVED_SEGMENTS.map((s) => `
-      <div class="card segment-card" onclick="applySavedSegment('${s.id}')">
-        <div class="segment-card-name">${s.name}</div>
+      <div class="card segment-card ${s.id === selectedSavedSegmentId ? 'selected' : ''}" data-saved-segment="${s.id}" onclick="applySavedSegment('${s.id}')">
+        <div class="segment-card-name">${escapeHtml(s.name)}</div>
         <div class="segment-card-desc">Saved audience — click to load these criteria</div>
       </div>`).join('');
   }
@@ -902,6 +913,8 @@ function computeSendResultsForAudience(eligible, channelIds) {
     document.querySelectorAll('.region-chip').forEach((el) => {
       el.classList.toggle('on', regionState[el.dataset.region]);
     });
+    selectedSavedSegmentId = id;
+    renderSavedSegments();
     recomputeSegment();
   }
 
@@ -982,6 +995,7 @@ function computeSendResultsForAudience(eligible, channelIds) {
     const lines = [
       'Checking consent and suppression rules...',
       `Removing self-exclusion and data-use restrictions: ${excludedForCompliance.toLocaleString()} people`,
+      `Matching your filter criteria: ${eligible.toLocaleString()} of ${currentAudience.complianceSafe.toLocaleString()} compliance-safe fans`,
       `Eligible audience: ${eligible.toLocaleString()}`,
       `Sending via ${channelNames}...`,
     ];

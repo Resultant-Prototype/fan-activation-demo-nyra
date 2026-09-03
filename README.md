@@ -1,4 +1,4 @@
-# Activation Layer Demo — Belmont Racing Group
+# Fan Activation Layer Demo — NYRA
 
 A single-file, zero-backend mockup showing a target customer-engagement
 architecture: Databricks as the system of record (Customer 360, identity
