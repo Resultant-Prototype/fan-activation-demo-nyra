@@ -10,12 +10,15 @@ Open `index.html` directly, no install required. All data is fabricated.
 
 ## Tabs
 
-1. **Today** — the fragmented state: disconnected ticketing, wagering, email,
-   concessions, and unsubscribe systems.
+1. **Today** — the fragmented state: disconnected Ticketmaster, ADW,
+   Marketing, and F&B systems.
 2. **Target Architecture** — the proposed model.
-3. **Try It** — pick a fabricated audience, pick a channel, send, and see
-   consent/suppression logic and engagement results, all computed client-side
-   from fixed, fabricated numbers.
+3. **Individual View** — one resolved fan record, with fields shown or
+   restricted based on the Front-line Staff / Compliance Officer role
+   selected. All 4 sample fans are fabricated.
+4. **Segment Builder** — live filter criteria against a fabricated 5,000-
+   record sample population, with a role-gated "tag & save" action and the
+   same channel-send-results flow the original "Try It" tab shipped with.
 
 ## Development
 
