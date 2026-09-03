@@ -295,20 +295,18 @@
   </section>
   <section id="tab-individual" class="tab-panel">
     <div class="eyebrow">One Resolved Identity</div>
-    <p class="tab-note tab-note-intro">Every system Belmont Racing Group runs on, matched to one fan record. What's visible below changes with the role selected — the platform enforces need-to-know access once, instead of every downstream tool doing it separately.</p>
+    <p class="tab-note tab-note-intro">Every system NYRA runs on, matched to one fan record. What's visible below changes with the role selected — the platform enforces need-to-know access once, instead of every downstream tool doing it separately.</p>
     <div class="card" style="margin-bottom: 16px;">
       <div class="card-title">Viewing as</div>
-      <div class="channel-row-picker" id="role-picker">
-        <div class="channel-chip selected" data-role="marketing" onclick="selectRole('marketing')">Marketing Rep</div>
-        <div class="channel-chip" data-role="vip" onclick="selectRole('vip')">VIP Services</div>
-        <div class="channel-chip" data-role="compliance" onclick="selectRole('compliance')">Compliance Officer</div>
-        <div class="channel-chip" data-role="exec" onclick="selectRole('exec')">Executive</div>
+      <div class="channel-row-picker">
+        <div class="channel-chip role-chip selected" data-role="frontline" onclick="selectRole('frontline')">Front-line Staff</div>
+        <div class="channel-chip role-chip" data-role="compliance" onclick="selectRole('compliance')">Compliance Officer</div>
       </div>
-      <p class="role-hint" id="role-hint"></p>
+      <p class="role-hint"></p>
     </div>
     <div class="card" style="margin-bottom: 16px;">
-      <div class="card-title">Search fan record</div>
-      <select id="fan-select" onchange="renderFan()" style="padding: 8px 10px; border-radius: var(--radius); border: 1px solid var(--gray-200); font-family: var(--font); min-width: 260px;"></select>
+      <div class="card-title">Fan record</div>
+      <div class="segment-grid" id="fan-card-row"></div>
     </div>
     <div id="fan-card"></div>
   </section>
@@ -633,12 +631,191 @@ function computeSendResultsForAudience(eligible, channelIds) {
     document.querySelectorAll('.role-hint').forEach((el) => {
       el.textContent = ROLES[role].hint;
     });
+    renderFan();
   }
 
   function initRolePickers() {
     document.querySelectorAll('.role-hint').forEach((el) => {
       el.textContent = ROLES[currentRole].hint;
     });
+  }
+
+  const FANS = [
+    {
+      id: 'tier-mismatch',
+      cardDesc: 'Tier flagged',
+      name: 'Renata Delgado',
+      fanId: 'NYRA-118824',
+      email: 'r.delgado@example.com',
+      phone: '(516) 555-0142',
+      zip: '11561',
+      systems: ['Ticketmaster', 'ADW', 'Marketing'],
+      handle: 21400,
+      ticketRevenue: 187500,
+      onSiteSpend: 6200,
+      tier: 'Core',
+      tierFlag: 'Ticket revenue crosses the VIP threshold — still tagged Core.',
+      trackExclusion: false,
+      mobileExclusion: false,
+      dataRestricted: false,
+      consent: { marketing: true, surveys: true, events: true, promotions: false },
+      activity: [
+        { date: 'Aug 14, 2026', source: 'Corporate Sponsorship', desc: 'Belmont Park suite provided' },
+        { date: 'Jul 02, 2026', source: 'Marketing / Optimove', desc: 'Season pass renewal email — opened, no click' },
+      ],
+    },
+    {
+      id: 'exclusion-gap',
+      cardDesc: 'Exclusion gap',
+      name: 'James Whitfield',
+      fanId: 'NYRA-104417',
+      email: 'j.whitfield@example.com',
+      phone: '(732) 555-0198',
+      zip: '08701',
+      systems: ['ADW'],
+      handle: 96800,
+      ticketRevenue: 0,
+      onSiteSpend: 0,
+      tier: 'Wagerer',
+      tierFlag: null,
+      trackExclusion: false,
+      mobileExclusion: true,
+      dataRestricted: false,
+      consent: { marketing: true, surveys: false, events: true, promotions: true },
+      activity: [
+        { date: 'Aug 28, 2026', source: 'ADW', desc: '142 mobile wagers logged this season' },
+        { date: 'Aug 03, 2026', source: 'Compliance', desc: 'Self-exclusion recorded — mobile wagering only' },
+      ],
+    },
+    {
+      id: 'horsemen-overlap',
+      cardDesc: 'Horsemen overlap',
+      name: 'Marisol Alvarez',
+      fanId: 'NYRA-097731',
+      email: 'm.alvarez@example.com',
+      phone: '(518) 555-0110',
+      zip: '12866',
+      systems: ['Horsemen Notification System', 'ADW', 'F&B'],
+      handle: 15200,
+      ticketRevenue: 4100,
+      onSiteSpend: 3300,
+      tier: 'VIP',
+      tierFlag: null,
+      trackExclusion: false,
+      mobileExclusion: false,
+      dataRestricted: false,
+      consent: { marketing: true, surveys: true, events: true, promotions: true },
+      activity: [
+        { date: 'Aug 19, 2026', source: 'Horsemen Notification System', desc: 'Two starts entered, Saratoga Race Course' },
+        { date: 'Aug 05, 2026', source: 'F&B / Shift4', desc: 'Trackside dining, Saratoga clubhouse' },
+      ],
+    },
+    {
+      id: 'fevo-booking',
+      cardDesc: 'Fevo booking',
+      name: 'Ana Reyes',
+      fanId: 'NYRA-150062',
+      email: 'a.reyes@example.com',
+      phone: '(646) 555-0189',
+      zip: '11201',
+      systems: ['Ticketmaster', 'Fevo', 'Marketing'],
+      handle: 0,
+      ticketRevenue: 3400,
+      onSiteSpend: 2100,
+      tier: 'Emerging VIP',
+      tierFlag: null,
+      trackExclusion: false,
+      mobileExclusion: false,
+      dataRestricted: false,
+      consent: { marketing: true, surveys: true, events: true, promotions: true },
+      activity: [
+        { date: 'Aug 09, 2026', source: 'Fevo', desc: 'Booked a group experience, Belmont Park' },
+        { date: 'Aug 09, 2026', source: 'Ticketmaster', desc: 'Same-day Clubhouse ticket, matched to the Fevo booking' },
+      ],
+    },
+  ];
+  let selectedFanId = FANS[0].id;
+
+  function money(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function contactVerdict(fan) {
+    if (fan.trackExclusion || fan.mobileExclusion) return { text: 'Do-not-contact — self-exclusion applies', level: 'critical' };
+    if (fan.dataRestricted) return { text: 'Do-not-contact — data-use restricted', level: 'critical' };
+    return { text: 'Cleared to contact', level: 'good' };
+  }
+
+  function renderFanCardRow() {
+    document.getElementById('fan-card-row').innerHTML = FANS.map((f) => `
+      <div class="card segment-card ${f.id === selectedFanId ? 'selected' : ''}" data-fan="${f.id}" onclick="selectFan('${f.id}')">
+        <div class="segment-card-name">${f.name}</div>
+        <div class="segment-card-desc">${f.cardDesc}</div>
+      </div>`).join('');
+  }
+
+  function selectFan(fanId) {
+    selectedFanId = fanId;
+    document.querySelectorAll('#fan-card-row .segment-card').forEach((el) => {
+      el.classList.toggle('selected', el.dataset.fan === fanId);
+    });
+    renderFan();
+  }
+
+  function renderFan() {
+    const fan = FANS.find((f) => f.id === selectedFanId) || FANS[0];
+    const verdict = contactVerdict(fan);
+    const isCompliance = currentRole === 'compliance';
+
+    const contactBlock = isCompliance
+      ? `<div class="detail-rows">
+           <div class="detail-row"><span>Self-exclusion — on-track wagering</span><span class="status-pill ${fan.trackExclusion ? 'status-pill-critical' : 'status-pill-good'}">${fan.trackExclusion ? 'Excluded' : 'Clear'}</span></div>
+           <div class="detail-row"><span>Self-exclusion — mobile wagering</span><span class="status-pill ${fan.mobileExclusion ? 'status-pill-critical' : 'status-pill-good'}">${fan.mobileExclusion ? 'Excluded' : 'Clear'}</span></div>
+           <div class="detail-row"><span>Data-use restriction</span><span class="status-pill ${fan.dataRestricted ? 'status-pill-critical' : 'status-pill-good'}">${fan.dataRestricted ? 'Restricted' : 'None filed'}</span></div>
+         </div>`
+      : `<div class="status-pill ${verdict.level === 'critical' ? 'status-pill-critical' : 'status-pill-good'}">${verdict.text}</div>`;
+
+    const contactInfoBlock = isCompliance
+      ? `<div class="detail-rows">
+           <div class="detail-row"><span>Email</span><span>${fan.email}</span></div>
+           <div class="detail-row"><span>Phone</span><span>${fan.phone}</span></div>
+           <div class="detail-row"><span>ZIP</span><span>${fan.zip}</span></div>
+         </div>`
+      : `<p class="restricted-note">Contact detail restricted for this role. ZIP only: ${fan.zip}</p>`;
+
+    const valueBlock = isCompliance
+      ? `<p class="restricted-note">Value and tier detail restricted for this role.</p>`
+      : `<div class="ban-row">
+           <div class="ban-card"><div class="ban-label">Lifetime Handle</div><div class="ban-value">${money(fan.handle)}</div></div>
+           <div class="ban-card"><div class="ban-label">Ticket Revenue</div><div class="ban-value">${money(fan.ticketRevenue)}</div></div>
+           <div class="ban-card"><div class="ban-label">On-Site Spend</div><div class="ban-value">${money(fan.onSiteSpend)}</div></div>
+         </div>
+         <span class="badge" style="margin-top: 10px; display: inline-block;">${fan.tier}</span>
+         ${fan.tierFlag ? `<div class="flag-note">${fan.tierFlag}</div>` : ''}`;
+
+    const consentBlock = `<div class="consent-grid">
+      ${['marketing', 'surveys', 'events', 'promotions'].map((k) => `<div class="consent-item ${fan.consent[k] ? 'on' : 'off'}"><div class="consent-item-name">${k}</div><div class="consent-item-state">${fan.consent[k] ? 'Opted in' : 'Opted out'}</div></div>`).join('')}
+    </div>`;
+
+    const activityBlock = isCompliance
+      ? `<p class="restricted-note">${fan.activity.length} interactions on file — detail restricted for this role.</p>`
+      : `<div class="timeline">${fan.activity.map((a) => `<div class="timeline-item"><div class="timeline-date">${a.date}</div><div><div class="timeline-desc">${a.desc}</div><div class="timeline-source">${a.source}</div></div></div>`).join('')}</div>`;
+
+    document.getElementById('fan-card').innerHTML = `
+      <div class="card" style="margin-bottom: 16px;">
+        <div style="font-size: 18px; font-weight: 700; margin-bottom: 2px;">${fan.name}</div>
+        <div style="font-size: 12px; color: var(--gray-600); margin-bottom: 10px;">${fan.fanId}</div>
+        <div>${fan.systems.map((s) => `<span class="badge" style="margin-right: 6px;">${s}</span>`).join('')}</div>
+        <div style="margin-top: 14px;">${valueBlock}</div>
+      </div>
+      <div class="field-grid">
+        <div class="card"><div class="card-title">Contact status</div>${contactBlock}</div>
+        <div class="card"><div class="card-title">Consent</div>${consentBlock}</div>
+      </div>
+      <div class="field-grid" style="margin-top: 16px;">
+        <div class="card"><div class="card-title">Interaction history</div>${activityBlock}</div>
+        <div class="card"><div class="card-title">Contact details</div>${contactInfoBlock}</div>
+      </div>`;
   }
 
   let selectedSegmentId = null;
@@ -751,6 +928,10 @@ function computeSendResultsForAudience(eligible, channelIds) {
     isSending = false;
     updateSendButton();
   }
+
+  initRolePickers();
+  renderFanCardRow();
+  renderFan();
 
   function resetTab3() {
     clearReveal();
